@@ -76,10 +76,10 @@ export const Dashboard: React.FC = () => {
     const reqBoard = selectedFirmware.targetBoard;
     if (reqBoard === 'Auto Detect') return null;
 
-    const chipLower = detectedChip.toLowerCase();
-    const reqLower = reqBoard.toLowerCase();
+    const normalizedDetected = detectedChip.toLowerCase().replace(/[-_ ]/g, '');
+    const normalizedTarget = reqBoard.toLowerCase().replace(/[-_ ]/g, '');
 
-    if (!chipLower.includes(reqLower.replace('-', ''))) {
+    if (!normalizedDetected.includes(normalizedTarget)) {
       return `Selected firmware target (${reqBoard}) does not match detected hardware (${detectedChip}). Flashing is restricted for safety.`;
     }
     return null;
