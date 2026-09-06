@@ -11,6 +11,7 @@ import { ConfirmationModal } from '../components/common/ConfirmationModal';
 import { getActiveFirmwares, saveFlashRecord } from '../services/firmwareService';
 import { espService } from '../services/espService';
 import { useAuth } from '../contexts/AuthContext';
+import { processFirmwareFile } from '../utils/firmwareParser';
 import type { Firmware, ConnectionStatus, LogMessage, ESPBoardType } from '../types';
 
 export const Dashboard: React.FC = () => {
@@ -168,11 +169,14 @@ export const Dashboard: React.FC = () => {
         
         const blob = await response.blob();
         const arrayBuffer = await blob.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
-        const address = parseInt(fileInfo.flashAddress, 16) || 0x10000;
+        const rawBytes = new Uint8Array(arrayBuffer);
+        const fallbackAddress = parseInt(fileInfo.flashAddress, 16) || 0x10000;
+        
+        // Auto-parse .hex, .uf2, or raw binary format
+        const processed = processFirmwareFile(fileInfo.fileName, rawBytes, fallbackAddress);
 
-        fileArray.push({ data: uint8Array, address });
-        addLog(`Downloaded ${fileInfo.fileName} (${(uint8Array.length / 1024).toFixed(1)} KB) -> Address: ${fileInfo.flashAddress}`, 'success');
+        fileArray.push({ data: processed.data, address: processed.address });
+        addLog(`Downloaded & Prepared ${fileInfo.fileName} [${processed.format}] (${(processed.data.length / 1024).toFixed(1)} KB) -> Flash Address: 0x${processed.address.toString(16)}`, 'success');
       }
 
       // Execute flash via esptool-js

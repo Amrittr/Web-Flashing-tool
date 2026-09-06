@@ -25,7 +25,7 @@ export const FirmwareUploadForm: React.FC = () => {
   const [releaseNotes] = useState('');
   const [status, setStatus] = useState<'active' | 'inactive'>('active');
 
-  // Binary files array supporting single or multi-bin packages
+  // Firmware files array supporting single or multi-binary packages
   const [files, setFiles] = useState<BinaryFileInput[]>([
     { id: '1', name: 'firmware.bin', flashAddress: '0x0', file: null }
   ]);
@@ -36,7 +36,7 @@ export const FirmwareUploadForm: React.FC = () => {
   const handleAddFileRow = () => {
     setFiles([
       ...files,
-      { id: Date.now().toString(), name: `part-${files.length + 1}.bin`, flashAddress: '0x10000', file: null }
+      { id: Date.now().toString(), name: `firmware-part-${files.length + 1}.bin`, flashAddress: '0x10000', file: null }
     ]);
   };
 
@@ -60,7 +60,7 @@ export const FirmwareUploadForm: React.FC = () => {
     // Validation
     const missingFiles = files.some(f => !f.file);
     if (missingFiles) {
-      setToast({ message: "Please select a .bin file for all component rows.", type: 'error' });
+      setToast({ message: "Please select a firmware file (.bin, .hex, .uf2, .elf, etc.) for all component rows.", type: 'error' });
       return;
     }
 
@@ -206,17 +206,22 @@ export const FirmwareUploadForm: React.FC = () => {
             />
           </div>
 
-          {/* Firmware Binary Files Component Section */}
+          {/* Firmware Files Component Section */}
           <div className="pt-4 border-t border-slate-800 space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-sm font-bold text-slate-200">Binary Image Components</h3>
-                <p className="text-xs text-slate-400">Specify offset addresses and upload binary (.bin) files</p>
+                <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2">
+                  Firmware Image Components
+                  <span className="text-[10px] font-normal px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-800/60 text-cyan-400">
+                    Supports .bin, .hex, .uf2, .elf, .dfu, .zip
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-400">Specify flash offset addresses and upload your firmware files</p>
               </div>
               <button
                 type="button"
                 onClick={handleAddFileRow}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-400 text-xs font-semibold border border-slate-800 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-400 text-xs font-semibold border border-slate-800 transition-colors self-start sm:self-auto"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Add Component File
@@ -238,10 +243,17 @@ export const FirmwareUploadForm: React.FC = () => {
                   </div>
 
                   <div className="sm:col-span-7">
-                    <label className="block text-[11px] text-slate-400 mb-1">Binary File (.bin)</label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[11px] text-slate-400">Firmware File (.bin, .hex, .uf2, .elf, etc.)</label>
+                      {row.file && (
+                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-cyan-300">
+                          {row.file.name.split('.').pop()?.toUpperCase()}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="file"
-                      accept=".bin"
+                      accept=".bin,.hex,.ihex,.elf,.uf2,.dfu,.img,.zip,.ota,.out,application/octet-stream"
                       onChange={(e) => handleFileChange(row.id, e.target.files?.[0] || null)}
                       className="w-full text-xs text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-cyan-500/10 file:text-cyan-400 hover:file:bg-cyan-500/20 cursor-pointer"
                     />
