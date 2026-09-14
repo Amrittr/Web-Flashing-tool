@@ -105,11 +105,18 @@ export const Login: React.FC = () => {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-xs text-slate-400">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-cyan-400 hover:underline font-medium">
-            Register now
-          </Link>
+        <div className="mt-6 text-center text-xs text-slate-400 space-y-2">
+          <div>
+            Don't have an account?{' '}
+            <Link to="/register" className="text-cyan-400 hover:underline font-medium">
+              Register now
+            </Link>
+          </div>
+          <div>
+            <Link to="/" className="text-slate-500 hover:text-slate-300 transition-colors inline-flex items-center gap-1">
+              ← Back to Landing Page
+            </Link>
+          </div>
         </div>
       </div>
     </div>

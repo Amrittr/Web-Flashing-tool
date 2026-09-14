@@ -10,7 +10,8 @@ import {
   LayoutDashboard,
   HardDriveUpload,
   Users,
-  Activity
+  Activity,
+  Globe
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -48,6 +49,17 @@ export const Navbar: React.FC = () => {
           <nav className="hidden md:flex items-center gap-1 ml-4 border-l border-slate-800 pl-4">
             {!isAdmin ? (
               <>
+                <Link
+                  to="/"
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    isCurrent('/') 
+                      ? 'bg-slate-800 text-cyan-400 border border-slate-700' 
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+                  }`}
+                >
+                  <Globe className="w-4 h-4" />
+                  Home
+                </Link>
                 <Link
                   to="/dashboard"
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${

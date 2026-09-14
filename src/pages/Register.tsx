@@ -119,11 +119,18 @@ export const Register: React.FC = () => {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-xs text-slate-400">
-          Already have an account?{' '}
-          <Link to="/login" className="text-cyan-400 hover:underline font-medium">
-            Sign in
-          </Link>
+        <div className="mt-6 text-center text-xs text-slate-400 space-y-2">
+          <div>
+            Already have an account?{' '}
+            <Link to="/login" className="text-cyan-400 hover:underline font-medium">
+              Sign in
+            </Link>
+          </div>
+          <div>
+            <Link to="/" className="text-slate-500 hover:text-slate-300 transition-colors inline-flex items-center gap-1">
+              ← Back to Landing Page
+            </Link>
+          </div>
         </div>
       </div>
     </div>
